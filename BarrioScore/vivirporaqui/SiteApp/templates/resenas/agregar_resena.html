@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Agregar Reseña</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_residencial">Residencial:</label>
+                    <select name="residencial" class="form-control" id="id_residencial">
+                        <option value="" selected>-----</option> <!-- Opción vacía por defecto -->
+                        {% for residencial in form.fields.residencial.queryset %}
+                        <option value="{{ residencial.id }}">{{ residencial.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_calificacion">Calificación:</label>
+                    <select name="calificacion" class="form-control" id="id_calificacion">
+                        
+                        {% for valor, descripcion in form.fields.calificacion.choices %}
+                        <option value="{{ valor }}">{{ descripcion }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_comentario">Comentario:</label>
+                    <textarea name="comentario" class="form-control" id="id_comentario" rows="4" placeholder="Escribe tu reseña aquí"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_hashtags">Hashtags (separados por comas):</label>
+                    <input type="text" name="hashtags" class="form-control" id="id_hashtags" placeholder="Agrega hashtags separados por comas">
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-block">Enviar Reseña</button> <!-- Botón centrado -->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

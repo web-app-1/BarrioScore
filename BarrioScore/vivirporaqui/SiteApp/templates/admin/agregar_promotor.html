@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Panel de Administración</h1>
+    <h2 class="text-center mb-4">Agregar Promotor</h2>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_nombre">Nombre:</label>
+                    {{ form.nombre.errors }}  <!-- Muestra los errores específicos del campo -->
+                    <input type="text" name="nombre" class="form-control" id="id_nombre">  <!-- Clase Bootstrap manual -->
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-block">Agregar Promotor</button>
+                </div>
+            </form>
+
+            {% if form.errors %}  <!-- Verifica si hay errores en el formulario -->
+            <div class="alert alert-danger mt-3">
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ error }}</li>  <!-- Muestra el mensaje de error -->
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

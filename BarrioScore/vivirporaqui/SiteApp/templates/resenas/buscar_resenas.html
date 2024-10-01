@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Buscar Reseñas por Residencial</h1>
+
+<form method="GET" action="{% url 'buscar_resenas' %}">
+    <div class="form-group">
+        <label for="residencial">Buscar Residencial</label>
+        <input type="text" id="residencial" name="residencial" class="form-control" value="{{ residencial }}" placeholder="Escribe el nombre del residencial">
+    </div>
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<hr>
+
+<h2>Reseñas</h2>
+<ul>
+    {% for resena in resenas %}
+    <li>
+        <strong>{{ resena.residencial.nombre }}</strong> - {{ resena.calificacion }} estrellas
+        <br>
+        Comentario: {{ resena.comentario }}
+        <br>
+        Hashtags: {{ resena.hashtags }}
+        <br>
+        Publicado por {{ resena.usuario.username }} el {{ resena.fecha_publicacion }}
+    </li>
+    {% empty %}
+    <p>No se encontraron reseñas para el residencial "{{ residencial }}".</p>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Listado de Reseñas</h1>
+<ul>
+    {% for resena in resenas %}
+    <li>
+        <strong>{{ resena.residencial.nombre }}</strong> - Calificación: {{ resena.calificacion }} - Comentario: {{ resena.comentario }}
+    </li>
+    {% empty %}
+    <p>No hay reseñas disponibles.</p>
+    {% endfor %}
+</ul>
+
+<!-- Mostrar el botón si el usuario está autenticado -->
+{% if user.is_authenticated %}
+<a href="{% url 'agregar_resena' %}" class="btn btn-primary">Crear Reseña</a>
+{% else %}
+<p>Inicia sesión para agregar una reseña.</p>
+{% endif %}
+
+{% endblock %}

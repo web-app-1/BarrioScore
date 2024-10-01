@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+      <h2 class="text-center">Panel de Administración</h2>
+      <p class="text-center">Gestionar Residenciales y Promotores</p>
+      
+      <div class="d-flex justify-content-center">
+          <div class="mr-3">
+              <a href="{% url 'agregar_promotor' %}" class="btn btn-primary">Agregar Promotor</a>
+          </div>
+          <div class="ml-3">
+              <a href="{% url 'agregar_residencial' %}" class="btn btn-primary">Agregar Residencial</a>
+          </div>
+      </div>
+
+      <div class="text-center mt-4">
+          <a href="{% url 'pagina_inicio' %}" class="btn btn-secondary">Regresar al Inicio</a>
+      </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Últimas Reseñas</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Promotor</th>
+                <th>Residencial</th>
+                <th>Calificación</th>
+                <th>Comentario</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resena in resenas %}
+            <tr>
+                <td>{{ resena.residencial.promotor.nombre }}</td>
+                <td>{{ resena.residencial.nombre }}</td>
+                <td>{{ resena.get_calificacion_display }}</td>
+                <td>{{ resena.comentario }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay reseñas disponibles</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
