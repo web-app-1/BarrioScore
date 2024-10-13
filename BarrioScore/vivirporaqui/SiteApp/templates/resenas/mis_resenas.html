@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Mis Reseñas</h1>
+
+    <!-- Formulario de búsqueda -->
+    <div class="mb-4">
+        <form method="GET" action="{% url 'mis_resenas' %}">
+            <input type="text" name="q" value="{{ query }}" placeholder="Buscar reseñas..." class="form-control">
+            <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+        </form>
+    </div>
+
+    <!-- Tabla de reseñas del usuario -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>Residencial</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if resenas %}
+                    {% for resena in resenas %}
+                    <tr>
+                        <td>{{ resena.residencial.nombre }}</td>
+                        <td>{{ resena.get_calificacion_display }}</td>
+                        <td>{{ resena.comentario }}</td>
+                        <td>{{ resena.fecha_publicacion|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">No has creado reseñas aún.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Botón para crear una nueva reseña -->
+    <div class="text-center mt-4">
+        <a href="{% url 'agregar_resena' %}" class="btn btn-success">Crear Nueva Reseña</a>
+    </div>
+</div>
+{% endblock %}

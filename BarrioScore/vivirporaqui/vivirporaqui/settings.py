@@ -126,5 +126,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = 'resenas'  # Redirige a la página de reseñas después de iniciar sesión
+LOGIN_REDIRECT_URL = 'mis_resenas'  # Redirige a la página de reseñas después de iniciar sesión
 LOGOUT_REDIRECT_URL = 'iniciar_sesion'  # Redirige a la página de login después de cerrar sesión

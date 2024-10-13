@@ -8,16 +8,11 @@ class ResenaForm(forms.ModelForm):
     class Meta:
         model = Resena
         fields = ['residencial', 'calificacion', 'comentario', 'hashtags']
-        labels = {
-            'residencial': 'Residencial',
-            'calificacion': 'Calificación',
-            'comentario': 'Comentario',
-            'hashtags': 'Hashtags (separados por comas)',
-        }
-        widgets = {
-            'comentario': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Escribe tu reseña aquí'}),
-            'hashtags': forms.TextInput(attrs={'placeholder': 'Agrega hashtags separados por comas'}),
-        }
+    
+    def __init__(self, *args, **kwargs):
+        super(ResenaForm, self).__init__(*args, **kwargs)
+        self.fields['residencial'].empty_label = "-----"  # Asegura que haya una opción vacía para residencial
+        self.fields['calificacion'].empty_label = "-----"  # Lo mismo para calificación
 
 
 class ResidencialForm(forms.ModelForm):

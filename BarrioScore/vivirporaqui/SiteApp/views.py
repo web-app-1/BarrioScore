@@ -3,10 +3,12 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from .models import Resena
+from .models import Resena, Residencial, Promotor
 from .forms import ResenaForm
 from .forms import ResidencialForm
 from .forms import PromotorForm
+from django.http import JsonResponse
+
 
 def registro(request):
     if request.method == 'POST':
@@ -44,17 +46,68 @@ def buscar_resenas(request):
 
 
 @login_required
+def mis_resenas(request):
+    # Obtener las reseñas del usuario autenticado
+    resenas_usuario = Resena.objects.filter(usuario=request.user).order_by('-fecha_publicacion')
+    
+    # Filtrar por comentario si hay una búsqueda
+    query = request.GET.get('q')
+    if query:
+        resenas_usuario = resenas_usuario.filter(comentario__icontains=query)
+
+    return render(request, 'resenas/mis_resenas.html', {'resenas': resenas_usuario, 'query': query})
+
+
+@login_required
 def agregar_resena(request):
     if request.method == 'POST':
         form = ResenaForm(request.POST)
+        residencial_form = ResidencialForm(request.POST)
+        promotor_form = PromotorForm(request.POST)
+        
         if form.is_valid():
+            # Guardamos la reseña
             resena = form.save(commit=False)
             resena.usuario = request.user  # Asigna el usuario actual a la reseña
+
+            # Si se seleccionó un Residencial existente, lo usamos
+            if request.POST.get('residencial'):
+                resena.residencial = Residencial.objects.get(id=request.POST.get('residencial'))
+            else:
+                # Si no se seleccionó un Residencial, creamos uno
+                if residencial_form.is_valid():
+                    nuevo_residencial = residencial_form.save(commit=False)
+
+                    # Si se seleccionó un Promotor existente, lo usamos
+                    if request.POST.get('promotor'):
+                        nuevo_residencial.promotor = Promotor.objects.get(id=request.POST.get('promotor'))
+                    elif promotor_form.is_valid():
+                        # Si no se seleccionó un Promotor, creamos uno nuevo
+                        nuevo_promotor = promotor_form.save()
+                        nuevo_residencial.promotor = nuevo_promotor
+                    
+                    nuevo_residencial.save()
+                    resena.residencial = nuevo_residencial
+
             resena.save()
             return redirect('resenas')  # Redirige a la lista de reseñas después de crearla
+
     else:
         form = ResenaForm()
-    return render(request, 'resenas/agregar_resena.html', {'form': form})
+        residencial_form = ResidencialForm()
+        promotor_form = PromotorForm()
+
+    residenciales = Residencial.objects.all()  # Obtiene todos los residenciales
+    promotores = Promotor.objects.all()  # Obtiene todos los promotores
+    
+    return render(request, 'resenas/agregar_resena.html', {
+        'form': form, 
+        'residencial_form': residencial_form, 
+        'promotor_form': promotor_form, 
+        'residenciales': residenciales, 
+        'promotores': promotores
+    })
+
 
 @login_required
 def agregar_residencial(request):
@@ -66,6 +119,24 @@ def agregar_residencial(request):
     else:
         form = ResidencialForm()
     return render(request, 'admin/agregar_residencial.html', {'form': form})
+
+#desde el cliente no staff
+def crear_residencial(request):
+    if request.method == 'POST':
+        form = ResidencialForm(request.POST)
+        if form.is_valid():
+            residencial = form.save()
+            return JsonResponse({'id': residencial.id, 'nombre': residencial.nombre})
+    return JsonResponse({'error': 'No se pudo crear el residencial'}, status=400)
+
+#desde el cliente no staff
+def crear_promotora(request):
+    if request.method == 'POST':
+        form = PromotorForm(request.POST)
+        if form.is_valid():
+            promotora = form.save()
+            return JsonResponse({'id': promotora.id, 'nombre': promotora.nombre})
+    return JsonResponse({'error': 'No se pudo crear la promotora'}, status=400)
 
 
 @staff_member_required  # Solo accesible para administradores

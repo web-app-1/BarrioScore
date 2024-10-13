@@ -2,29 +2,45 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center">Últimas Reseñas</h2>
-    <table class="table table-striped">
-        <thead>
+    <!-- Introducción al sitio -->
+    <div class="text-center mb-5">
+        <h1>Vivir Por Aquí</h1>
+        <hr>
+        <p>Bienvenido a <strong>VivirPorAquí</strong>, el sitio donde los usuarios comparten sus experiencias sobre las viviendas y residenciales en los que viven. Encuentra opiniones sobre la calidad de los desarrollos residenciales, la atención de los promotores y el estado de los servicios básicos en diferentes comunidades.</p>
+        <p>Si estás buscando información confiable para tomar decisiones sobre tu próxima vivienda, ¡Llegastes al lugar indicado!</p>
+        <p><strong>Registrate! es Gratis!</strong> Asi podras realizar busquedas y consultas adicionales.</p>
+        <hr>
+    </div>
+
+    <!-- Tabla de últimas reseñas -->
+    <h2 class="text-center mb-4">Últimas Reseñas</h2>
+
+    <table class="table table-bordered">
+        <thead class="thead-light">
             <tr>
                 <th>Promotor</th>
                 <th>Residencial</th>
                 <th>Calificación</th>
                 <th>Comentario</th>
+                <th>Fecha</th> <!-- Nueva columna de Fecha -->
             </tr>
         </thead>
         <tbody>
-            {% for resena in resenas %}
-            <tr>
-                <td>{{ resena.residencial.promotor.nombre }}</td>
-                <td>{{ resena.residencial.nombre }}</td>
-                <td>{{ resena.get_calificacion_display }}</td>
-                <td>{{ resena.comentario }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No hay reseñas disponibles</td>
-            </tr>
-            {% endfor %}
+            {% if resenas %}
+                {% for resena in resenas %}
+                    <tr>
+                        <td>{{ resena.residencial.promotor.nombre }}</td>
+                        <td>{{ resena.residencial.nombre }}</td>
+                        <td>{{ resena.get_calificacion_display }}</td>
+                        <td>{{ resena.comentario }}</td>
+                        <td>{{ resena.fecha_publicacion|date:"d/m/Y" }}</td> <!-- Formato de fecha -->
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay reseñas disponibles</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </div>

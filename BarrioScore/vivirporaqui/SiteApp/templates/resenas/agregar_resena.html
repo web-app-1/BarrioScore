@@ -9,41 +9,116 @@
             <form method="POST">
                 {% csrf_token %}
                 
+                <!-- Campo de Residencial con enlace al modal -->
                 <div class="form-group">
-                    <label for="id_residencial">Residencial:</label>
-                    <select name="residencial" class="form-control" id="id_residencial">
-                        <option value="" selected>-----</option> <!-- Opción vacía por defecto -->
-                        {% for residencial in form.fields.residencial.queryset %}
-                        <option value="{{ residencial.id }}">{{ residencial.nombre }}</option>
-                        {% endfor %}
-                    </select>
+                    <label for="id_residencial">Residencial</label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <select name="residencial" class="form-control" id="id_residencial">
+                            {% for residencial in form.residencial.field.queryset %}
+                                <option value="{{ residencial.id }}" {% if form.residencial.value == residencial.id %}selected{% endif %}>
+                                    {{ residencial.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <a href="#" data-toggle="modal" data-target="#modalCrearResidencial" class="ml-2">+ Crear nuevo Residencial</a>
+                    </div>
                 </div>
 
+                <!-- Campo de Promotora con enlace al modal -->
                 <div class="form-group">
-                    <label for="id_calificacion">Calificación:</label>
+                    <label for="id_promotora">Promotora</label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <select name="promotora" class="form-control" id="id_promotora">
+                            {% for promotor in form.promotora.field.queryset %}
+                                <option value="{{ promotor.id }}" {% if form.promotora.value == promotor.id %}selected{% endif %}>
+                                    {{ promotor.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <a href="#" data-toggle="modal" data-target="#modalCrearPromotora" class="ml-2">+ Crear nueva Promotora</a>
+                    </div>
+                </div>
+
+                <!-- Campo de Calificación -->
+                <div class="form-group">
+                    <label for="id_calificacion">Calificación</label>
                     <select name="calificacion" class="form-control" id="id_calificacion">
-                        
-                        {% for valor, descripcion in form.fields.calificacion.choices %}
-                        <option value="{{ valor }}">{{ descripcion }}</option>
+                        {% for value, label in form.calificacion.field.choices %}
+                            <option value="{{ value }}" {% if form.calificacion.value == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
 
+                <!-- Campo de Comentario -->
                 <div class="form-group">
-                    <label for="id_comentario">Comentario:</label>
-                    <textarea name="comentario" class="form-control" id="id_comentario" rows="4" placeholder="Escribe tu reseña aquí"></textarea>
+                    <label for="id_comentario">Comentario</label>
+                    <textarea name="comentario" class="form-control" id="id_comentario">{{ form.comentario.value }}</textarea>
                 </div>
 
+                <!-- Campo de Hashtags -->
                 <div class="form-group">
                     <label for="id_hashtags">Hashtags (separados por comas):</label>
-                    <input type="text" name="hashtags" class="form-control" id="id_hashtags" placeholder="Agrega hashtags separados por comas">
+                    <input type="text" name="hashtags" class="form-control" id="id_hashtags" value="{{ form.hashtags.value }}">
                 </div>
 
+                <!-- Botón de Enviar -->
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-block">Enviar Reseña</button> <!-- Botón centrado -->
+                    <button type="submit" class="btn btn-primary btn-block">Enviar Reseña</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<!-- Modal Crear Residencial -->
+<div class="modal fade" id="modalCrearResidencial" tabindex="-1" role="dialog" aria-labelledby="modalCrearResidencialLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearResidencialLabel">Crear nuevo Residencial</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formCrearResidencial">
+                    <div class="form-group">
+                        <label for="id_nombre_residencial">Nombre del Residencial</label>
+                        <input type="text" class="form-control" id="id_nombre_residencial" placeholder="Introduce el nombre del residencial">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Crear Residencial</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear Promotora -->
+<div class="modal fade" id="modalCrearPromotora" tabindex="-1" role="dialog" aria-labelledby="modalCrearPromotoraLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearPromotoraLabel">Crear nueva Promotora</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formCrearPromotora">
+                    <div class="form-group">
+                        <label for="id_nombre_promotora">Nombre de la Promotora</label>
+                        <input type="text" class="form-control" id="id_nombre_promotora" placeholder="Introduce el nombre de la promotora">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Crear Promotora</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Aquí irán los scripts para enviar los datos de los modales al formulario principal
+</script>
 {% endblock %}
